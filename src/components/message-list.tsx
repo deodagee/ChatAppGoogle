@@ -1,7 +1,6 @@
 import { useQuery, gql } from "@apollo/client";
-import { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
-
+import React, { useState, useEffect } from 'react';
 import type { Message as IMessage } from "@/components/message";
 import { Message } from "@/components/message";
 
@@ -23,18 +22,39 @@ const GetRecentMessagesQuery = gql`
 `;
 
 export const MessageList = () => {
+
+  const [messages, setMessages] = useState<IMessage[]>([]);
+  useEffect(() => {
+    const eventSource = new EventSource('/api/sse');
+  
+    eventSource.onmessage = (event) => {
+      const message = JSON.parse(event.data) as IMessage; // Parse the message as IMessage type
+      setMessages((prevMessages: IMessage[]) => [...prevMessages, message]);
+    };
+
+    eventSource.onerror = (error) => {
+      console.error('Error occurred:', error);
+    };
+    
+    return () => {
+      // Cleanup: close the EventSource connection when the component unmounts
+      eventSource.close();
+    };
+  }, []);
+
+    const { loading, error, data } = useQuery<{
+      messageCollection: { edges: { node: IMessage }[] };
+    }>(GetRecentMessagesQuery, {
+      variables: {
+        last: 100,
+      },
+    });
+    
   const [scrollRef, inView, entry] = useInView({
     trackVisibility: true,
     delay: 1000,
   });
 
-  const { loading, error, data } = useQuery<{
-    messageCollection: { edges: { node: IMessage }[] };
-  }>(GetRecentMessagesQuery, {
-    variables: {
-      last: 100,
-    },
-  });
 
   useEffect(() => {
     if (entry?.target) {
