@@ -3,7 +3,7 @@ schema
     providers: [
       {type: oidc, issuer: "{{ env.ISSUER_URL }}" }
     ]
-    rules: [{ allow: public }]
+    rules: [{ allow: private }]
   ) {
   query: Query
 }
