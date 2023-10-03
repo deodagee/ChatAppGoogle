@@ -1,6 +1,7 @@
 import { formatRelative, formatDistance, differenceInHours } from "date-fns";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 
 export type Message = {
   id: string;
@@ -32,7 +33,7 @@ export const Message = ({ message }: Props) => {
       >
         {message?.avatar && (
           <div className="w-12 h-12 overflow-hidden flex-shrink-0 rounded">
-            <a
+            <Link
               href={`https://google.com/${message.username}`}
               target="_blank"
               rel="noopener noreferrer"
@@ -44,7 +45,7 @@ export const Message = ({ message }: Props) => {
                 alt={message.username}
                 title={message.username}
               />
-            </a>
+            </Link>
           </div>
         )}
         <span
