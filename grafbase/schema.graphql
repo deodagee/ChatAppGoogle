@@ -1,7 +1,7 @@
 schema
   @auth(
     providers: [
-      { type: jwt, issuer: "nextauth", secret: "{{ env.NEXTAUTH_SECRET }}" }
+      {type: oidc, issuer: "{{ env.ISSUER_URL }}" }
     ]
     rules: [{ allow: public }]
   ) {
@@ -15,3 +15,8 @@ type Message @model {
   likes: Int @default(value: 0)
   dislikes: Int @default(value: 0)
 }
+
+
+
+
+
