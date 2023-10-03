@@ -30,8 +30,8 @@ export const ApolloProviderWrapper = ({ children }: PropsWithChildren) => {
       return {
         headers: {
           ...headers,
-          authorization: `Bearer ${token}`,
-        },
+          authorization: token ? `Bearer ${token}` : '',
+                },
       };
     });
 
